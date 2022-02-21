@@ -1,4 +1,4 @@
-# The bot downloads comics and uploads them to a group in contact.
+# VK comix uploading bot.
 
 Script for publishing comics from the site [xkcd](https://xkcd.com/).
 
