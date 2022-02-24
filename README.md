@@ -23,7 +23,7 @@ Installing libraries:
 
 ## Usage example
 
-`python main.py`
+```python main.py```
 
 ## Objective of the project
 
@@ -54,7 +54,7 @@ USER_ID=''
 
 ## Пример использования
 
-`python main.py`
+```python main.py```
 
 ## Цель проекта
 
