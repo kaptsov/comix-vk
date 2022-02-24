@@ -5,7 +5,11 @@ from dotenv import load_dotenv
 import random
 import time
 
-upload_timer = 10
+UPLOAD_TIMER = 10
+
+
+class VKError(requests.HTTPError):
+    pass
 
 
 def create_dirs(*args):
@@ -22,9 +26,8 @@ def download_image(url, full_image_name):
         file.write(response.content)
 
 
-def download_comix(total_pics):
+def download_comix(pic_num):
 
-    pic_num = random.randint(1, total_pics)
     response = requests.get(f'https://xkcd.com/{pic_num}/info.0.json')
     response.raise_for_status()
 
@@ -36,7 +39,7 @@ def download_comix(total_pics):
     return img_comment, img_name
 
 
-def get_album_info(access_token):
+def get_album_info(access_token, user_id, group_id):
 
     url = 'https://api.vk.com/method/'
     method = 'photos.getWallUploadServer'
@@ -71,7 +74,8 @@ def upload_photo(img_name, upload_url):
     return server, photo, photo_hash
 
 
-def get_media_id(access_token):
+def get_media_id(access_token,
+                 photo, server, photo_hash, group_id, img_comment):
 
     url = 'https://api.vk.com/method/'
     method = 'photos.saveWallPhoto'
@@ -127,12 +131,27 @@ if __name__ == '__main__':
 
         comix_dir = "comix/"
         create_dirs(comix_dir)
+        pic_num = random.randint(1, total_pics)
 
-        img_comment, img_name = download_comix(total_pics)
-        upload_data, album_id, upload_url = get_album_info(access_token)
-        server, photo, photo_hash = upload_photo(img_name, upload_url)
-        media_id, owner_id = get_media_id(access_token)
-        post_to_vk(group_id, owner_id, media_id, access_token)
+        try:
+            img_comment, img_name = download_comix(pic_num)
+            upload_data, album_id, upload_url = get_album_info(
+                                                                access_token,
+                                                                user_id,
+                                                                group_id
+                                                                )
+            server, photo, photo_hash = upload_photo(img_name, upload_url)
+            media_id, owner_id = get_media_id(
+                                            access_token, photo, server,
+                                            photo_hash, group_id, img_comment
+                                            )
+            post_to_vk(group_id, owner_id, media_id, access_token)
+        except VKError as error:
+            print('Ошибка обращения к API vk.com')
+        except requests.exceptions.HTTPError:
+            print('Ошибка обработки HTTP запроса, запустите скрипт еще раз')
+        finally:
+            shutil.rmtree('comix')
 
-        shutil.rmtree('comix')
-        time.sleep(upload_timer)
+        time.sleep(UPLOAD_TIMER)
+
