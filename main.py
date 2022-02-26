@@ -136,15 +136,15 @@ if __name__ == '__main__':
         try:
             img_comment, img_name = download_comix(pic_num)
             upload_data, album_id, upload_url = get_album_info(
-                                                                access_token,
-                                                                user_id,
-                                                                group_id
-                                                                )
+                access_token,
+                user_id,
+                group_id
+                )
             server, photo, photo_hash = upload_photo(img_name, upload_url)
             media_id, owner_id = get_media_id(
-                                            access_token, photo, server,
-                                            photo_hash, group_id, img_comment
-                                            )
+                access_token, photo, server,
+                photo_hash, group_id, img_comment
+                )
             post_to_vk(group_id, owner_id, media_id, access_token)
         except VKError as error:
             print('Ошибка обращения к API vk.com')
