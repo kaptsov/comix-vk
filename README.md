@@ -18,12 +18,16 @@ USER_ID=''
 
 Installing libraries:
 
-```pip install -r requirements.txt```
+```
+pip install -r requirements.txt
+```
 
 
 ## Usage example
 
-```python main.py```
+```
+python main.py
+```
 
 ## Objective of the project
 
@@ -49,12 +53,16 @@ USER_ID=''
 
 Установка библиотек:
 
-```pip install -r requirements.txt```
+```
+pip install -r requirements.txt
+```
 
 
 ## Пример использования
 
-```python main.py```
+```
+python main.py
+```
 
 ## Цель проекта
 
