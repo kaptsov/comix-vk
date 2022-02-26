@@ -6,6 +6,7 @@ import random
 import time
 
 UPLOAD_TIMER = 10
+ERROR_CODE = 'error'
 
 
 class VKError(requests.HTTPError):
@@ -53,6 +54,9 @@ def get_album_info(access_token, user_id, group_id):
     response = requests.get(f'{url}{method}', params=params)
     response.raise_for_status()
 
+    if ERROR_CODE in response.json():
+        raise VKError
+
     upload_data = response.json()['response']
     album_id = str(upload_data['album_id'])[1:]
     upload_url = upload_data['upload_url']
@@ -91,6 +95,9 @@ def get_media_id(access_token,
     response = requests.post(f'{url}{method}', params=params)
     response.raise_for_status()
 
+    if ERROR_CODE in response.json():
+        raise VKError
+
     save_data = response.json()['response'][0]
     media_id = save_data['id']
     owner_id = save_data['owner_id']
@@ -112,6 +119,9 @@ def post_to_vk(group_id, owner_id, media_id, access_token):
     }
     response = requests.get(f'{url}{method}', params=params)
     response.raise_for_status()
+
+    if ERROR_CODE in response.json():
+        raise VKError
 
 
 if __name__ == '__main__':
