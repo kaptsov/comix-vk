@@ -54,10 +54,11 @@ def get_album_info(access_token, user_id, group_id):
     response = requests.get(f'{url}{method}', params=params)
     response.raise_for_status()
 
-    if ERROR_CODE in response.json():
+    upload_data = response.json()['response']
+
+    if ERROR_CODE in upload_data:
         raise VKError
 
-    upload_data = response.json()['response']
     album_id = str(upload_data['album_id'])[1:]
     upload_url = upload_data['upload_url']
     return upload_data, album_id, upload_url
@@ -95,10 +96,11 @@ def get_media_id(access_token,
     response = requests.post(f'{url}{method}', params=params)
     response.raise_for_status()
 
-    if ERROR_CODE in response.json():
+    save_data = response.json()['response'][0]
+
+    if ERROR_CODE in save_data:
         raise VKError
 
-    save_data = response.json()['response'][0]
     media_id = save_data['id']
     owner_id = save_data['owner_id']
     return media_id, owner_id
